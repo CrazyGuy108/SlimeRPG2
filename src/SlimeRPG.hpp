@@ -1,89 +1,54 @@
-#include <iostream>
+#ifndef SLIMERPG_HPP
+#define SLIMERPG_HPP
+
 #include <cstdint>
 #include <string>
 #include <vector>
-#include <ctime>
-#include <cstdlib>
-#include <thread>
 
+// gets input from user
+void input(std::string& ref, const std::string& msg);
 
+// pauses the thread for an amount of milliseconds
+void sleep(unsigned milliseconds);
 
-// Gets input from user.
-inline void input(std::string &ref, const std::string &msg)
-{
-	std::cout << msg;
-	std::getline(std::cin, ref);
-}
-
-// Pauses the thread for an amount of milliseconds.
-inline void sleep(const unsigned milliseconds)
-{
-	std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
-}
-
-// A "..." with each dot separated by a 1 second delay to simulate waiting for something.
-inline void dotdotdot()
-{
-	std::cout << '.';
-	sleep(1000);
-
-	std::cout << '.';
-	sleep(1000);
-
-	std::cout << '.';
-	sleep(1000);
-
-	std::cout << '\n';
-}
-
-
+// displays a "..." message with each dot separated by a 1 second delay
+void dotdotdot();
 
 // Player struct.
 struct Player
 {
-	std::string
-		nam; // Player name.
-
-	uint16_t
-		chp, // Current Health Points.
-		mhp, // Max Health.
-		lvl, // Level.
-		exp, // Experience.
-		xpt, // Exp until next levelup.
-		atk, // Attack.
-		def, // Defense.
-		loc; // Location ID.
+	std::string nam; // player name
+	uint16_t chp; // current health points
+	uint16_t mhp; // max Health
+	uint16_t lvl; // level
+	uint16_t exp; // experience
+	uint16_t xpt; // exp until next levelup
+	uint16_t atk; // attack
+	uint16_t def; // defense
+	uint16_t loc; // location id
 };
 
 // Monster struct.
 struct Monster
 {
-	std::string
-		nam, // Monster name.
-		msg; // Encounter message.
-
-	uint16_t
-		chp, // Current Health Points.
-		mhp, // Max Health.
-		lvl, // Level.
-		exp, // Experience given.
-		atk, // Attack.
-		def; // Defense.
+	std::string nam; // monster name
+	std::string msg; // encounter message
+	uint16_t chp; // current health points
+	uint16_t mhp; // max health
+	uint16_t lvl; // level
+	uint16_t exp; // experience given when killed
+	uint16_t atk; // attack
+	uint16_t def; // defense
 };
 
 // Location struct.
 struct Location
 {
-	std::string
-		nam; // Location name.
-
-	uint16_t
-		lvl; // Level requirement.
-
-	std::vector<Monster>
-		thr; // List of encounterable threats.
-
-	std::vector<std::string>
-		msg, // Messages randomly displayed when recovering.
-		dth; // Recovery messages when you've killed every monster in the area.
+	std::string nam; // location name
+	uint16_t lvl; // level requirement to enter
+	std::vector<Monster> thr; // list of encounterable threats
+	std::vector<std::string> msg; // messages randomly displayed when recovering
+	std::vector<std::string> dth; // recovery messages when you've killed every monster in the area
 };
+
+#endif // SLIMERPG_HPP
