@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <thread>
+#include "location.hpp"
+#include "monster.hpp"
+#include "player.hpp"
 
 // parses a command, returning true if the game should be terminated
 static bool parseCommand(const std::string& cmd);
@@ -42,8 +45,8 @@ void dotdotdot()
 // the main player
 Player player
 {
-	// format: nam, chp, mhp, lvl, exp, xpt, atk, def, loc
-	"Nameless Hero", 10, 10, 1, 0, 10, 5, 5, 0
+	// format: nam, chp, mhp, lvl, exp, atk, def, xpt, loc
+	"Nameless Hero", 10, 10, 1, 0, 5, 5, 10, 0
 };
 
 // pointer to the monster that the player is battling
@@ -55,37 +58,37 @@ uint8_t encounterIndex;
 // list of monsters
 std::vector<Monster> monsters
 {
-	// format: nam, msg, chp, mhp, lvl, exp, atk, def
+	// format: nam, chp, mhp, lvl, exp, atk, def, msg
 	Monster
 	{
 		"Green Slime",
+		5, 5, 1, 4, 3, 3,
 		"A green Slime appeared!\n",
-		5, 5, 1, 4, 3, 3
 	},
 	Monster
 	{
 		"Blue Slime",
+		8, 8, 2, 6, 5, 5,
 		"A blue Slime appears to avenge its little brother...\n",
-		8, 8, 2, 6, 5, 5
 	},
 	Monster
 	{
 		"Red Slime",
+		10, 10, 3, 8, 25, 0,
 		"A Slime, red with fury, approaches you\n",
-		10, 10, 3, 8, 25, 0
 	},
 	Monster
 	{
 		"Yellow Slime",
+		16, 16, 4, 10, 3, 10,
 		"A matured, yellow Slime confronts you\n",
-		16, 16, 4, 10, 3, 10
 	},
 	Monster
 	{
 		"Ghost Slime",
-		"The ghost of your victims appears...\n",
 		// good luck fighting THAT
-		65535, 65535, 65535, 65535, 65535, 65535
+		65535, 65535, 65535, 65535, 65535, 65535,
+		"The ghost of your victims appears...\n",
 	}
 };
 
