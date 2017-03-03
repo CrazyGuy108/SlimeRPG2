@@ -1,11 +1,11 @@
 #include "SlimeRPG.hpp"
+#include "location.hpp"
+#include "monster.hpp"
+#include "player.hpp"
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
 #include <thread>
-#include "location.hpp"
-#include "monster.hpp"
-#include "player.hpp"
 
 // parses a command, returning true if the game should be terminated
 static bool parseCommand(const std::string& cmd);

@@ -1,9 +1,9 @@
 #ifndef MONSTER_HPP
 #define MONSTER_HPP
 
+#include "entity.hpp"
 #include <cstdint>
 #include <string>
-#include "entity.hpp"
 
 class Monster : public Entity
 {

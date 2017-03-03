@@ -1,8 +1,8 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include <cstdint>
 #include "entity.hpp"
+#include <cstdint>
 
 class Player : public Entity
 {

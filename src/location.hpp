@@ -1,10 +1,10 @@
 #ifndef LOCATION_HPP
 #define LOCATION_HPP
 
+#include "monster.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "monster.hpp"
 
 class Location
 {
