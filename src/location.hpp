@@ -9,14 +9,26 @@
 class Location
 {
 public:
-	Location(std::string nam, uint16_t lvl, std::vector<Monster> thr,
-		std::vector<std::string> msg, std::vector<std::string> dth);
+	Location(std::string name, uint16_t levelRequirement,
+		std::vector<Monster> enemies,
+		std::vector<std::string> recoveryMessages,
+		std::vector<std::string> killerMessages);
 
-	std::string nam; // location name
-	uint16_t lvl; // level requirement to enter
-	std::vector<Monster> thr; // list of encounterable threats
-	std::vector<std::string> msg; // messages randomly displayed when recovering
-	std::vector<std::string> dth; // recovery messages when you've killed every monster in the area
+	std::string& getName() noexcept;
+	const std::string& getName() const noexcept;
+	uint16_t getLevelRequirement() const noexcept;
+	std::vector<Monster>& getEnemies() noexcept;
+	const std::vector<Monster>& getEnemies() const noexcept;
+	const std::vector<std::string>& getRecoveryMessages() const noexcept;
+	const std::vector<std::string>& getKillerMessages() const noexcept;
+
+private:
+	std::string name;
+	uint16_t levelRequirement;
+	std::vector<Monster> enemies;
+	std::vector<std::string> recoveryMessages;
+	// recovery messages for when you've killed every monster in the area
+	std::vector<std::string> killerMessages;
 };
 
 #endif // LOCATION_HPP

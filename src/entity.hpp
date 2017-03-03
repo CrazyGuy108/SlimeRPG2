@@ -8,17 +8,36 @@
 class Entity
 {
 public:
-	Entity(std::string nam, uint16_t chp, uint16_t mhp, uint16_t lvl,
-		uint16_t exp, uint16_t atk, uint16_t def);
+	Entity(std::string name, uint16_t currentHealth,
+		uint16_t maxHealth, uint16_t level, uint16_t experience,
+		uint16_t attack, uint16_t defense);
 	virtual ~Entity() = 0;
 
-	std::string nam; // name
-	uint16_t chp; // current health points
-	uint16_t mhp; // max health
-	uint16_t lvl; // level
-	uint16_t exp; // experience
-	uint16_t atk; // attack
-	uint16_t def; // defense
+	std::string& getName() noexcept;
+	const std::string& getName() const noexcept;
+	uint16_t getCurrentHealth() const noexcept;
+	uint16_t getMaxHealth() const noexcept;
+	uint16_t getLevel() const noexcept;
+	uint16_t getExperience() const noexcept;
+	uint16_t getAttack() const noexcept;
+	uint16_t getDefense() const noexcept;
+	void setName(const std::string& name);
+	void setName(std::string&& name) noexcept;
+	void setCurrentHealth(uint16_t currentHealth) noexcept;
+	void setMaxHealth(uint16_t maxHealth) noexcept;
+	void setLevel(uint16_t level) noexcept;
+	void setExperience(uint16_t experience) noexcept;
+	void setAttack(uint16_t attack) noexcept;
+	void setDefense(uint16_t defense) noexcept;
+
+private:
+	std::string name;
+	uint16_t currentHealth;
+	uint16_t maxHealth;
+	uint16_t level;
+	uint16_t experience;
+	uint16_t attack;
+	uint16_t defense;
 };
 
 #endif // ENTITY_HPP

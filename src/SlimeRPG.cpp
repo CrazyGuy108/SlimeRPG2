@@ -45,8 +45,10 @@ void dotdotdot()
 // the main player
 Player player
 {
-	// format: nam, chp, mhp, lvl, exp, atk, def, xpt, loc
-	"Nameless Hero", 10, 10, 1, 0, 5, 5, 10, 0
+	// name, currentHealth, maxHealth, level, experience, attack, defense,
+	//  expRequired, location
+	"Nameless Hero",
+	10, 10, 1, 0, 5, 5, 10, 0
 };
 
 // pointer to the monster that the player is battling
@@ -58,7 +60,8 @@ uint8_t encounterIndex;
 // list of monsters
 std::vector<Monster> monsters
 {
-	// format: nam, chp, mhp, lvl, exp, atk, def, msg
+	// name, currentHealth, maxHealth, level, experience, attack, defense,
+	//  encounterMessage
 	Monster
 	{
 		"Green Slime",
@@ -95,14 +98,15 @@ std::vector<Monster> monsters
 // list of locations
 std::vector<Location> locations
 {
-	// format: nam, lvl, thr, msg, dth
+	// name, levelRequirement, enemies, recoveryMessages, killerMessages
 	Location
 	{
 		"Slime Breeding Grounds", 1,
 		{
+			// 3 individual encounterable Green Slimes
 			monsters[0], monsters[0], monsters[0]
-		}, // 3 individual encounterable Green Slimes
-		{ // messages randomly displayed when recovering.
+		},
+		{ // messages randomly displayed when recovering
 			"Slimes, in their infancy, are green-colored, frolicking in the fields\n",
 			"A bright green slime approaches you and asks, \"Mama?\"\n",
 			"Some older green slimes seem to have a blue-ish tint to them\n"
@@ -112,8 +116,8 @@ std::vector<Location> locations
 			"Many slimes are living in fear now that their youthful generation is dead\n"
 		}
 	},
-	Location // if you kill or injure a monster, it stays dead/injured.
-	{        // so you can essentially fight it again when you recover.
+	Location // if you kill or injure a monster, it stays dead/injured
+	{        // so you can essentially fight it again when you recover
 		"Path of Slime", 2,
 		{
 			monsters[0], monsters[1], monsters[1]
@@ -192,7 +196,7 @@ int main()
 	// initialize the rest of the player object
 	
 	// get player name to finish loading the game
-	input(player.nam, "Done!\nWhat is your name?\n\n");
+	input(player.getName(), "Done!\nWhat is your name?\n\n");
 	std::cout << "\nType \"hlp\" for a list of commands\n";
 	// command loop
 	while (true)
@@ -278,23 +282,25 @@ static bool help()
 static bool stats()
 {
 	std::cout
-		<< "nam..." << player.nam << '\n'
-		<< "hp...." << player.chp << '/' << player.mhp << '\n'
-		<< "lvl..." << player.lvl << '\n'
-		<< "exp..." << player.exp << '\n'
-		<< "xpt..." << player.xpt << '\n'
-		<< "atk..." << player.atk << '\n'
-		<< "def..." << player.def << '\n'
-		<< "loc..." << locations[player.loc].nam << '\n';
+		<< "name........." << player.getName() << '\n'
+		<< "health......." << player.getCurrentHealth() << '/' <<
+			player.getMaxHealth() << '\n'
+		<< "level........" << player.getLevel() << '\n'
+		<< "experience..." << player.getExperience() << '/' <<
+			player.getExpRequired() << '\n'
+		<< "attack......." << player.getAttack() << '\n'
+		<< "defense......" << player.getDefense() << '\n'
+		<< "location....." << locations[player.getLocation()]
+			.getName() << '\n';
 	if (battling) // also lists monster stats if battling
 	{
 		std::cout
 			<< "\nMonster\n"
-			<< "nam..." << encounterPtr->nam << '\n'
-			<< "hp...." << encounterPtr->chp << '/' <<
-				encounterPtr->mhp << '\n'
-			<< "lvl..." << encounterPtr->lvl
-			<< (encounterPtr->lvl == 65535 ?
+			<< "name....." << encounterPtr->getName() << '\n'
+			<< "health..." << encounterPtr->getCurrentHealth() <<
+				'/' << encounterPtr->getMaxHealth() << '\n'
+			<< "level...." << encounterPtr->getLevel()
+			<< (encounterPtr->getLevel() == 65535 ?
 				"\nGetrekt nub\n" : "\n");
 	}
 	return false;
@@ -312,57 +318,70 @@ static bool fight()
 		bool monsterInsulted{ false };
 		// current damage formula: dmg = player.atk - monster.def
 		// checks if the dmg calculation would result in anything at most 1
-		if (player.atk - encounterPtr->def <= 1)
+		if (player.getAttack() - encounterPtr->getDefense() <= 1)
 		{
 			// if so, damage stays at 1, and the monster reminds the player that they should gitgud
-			std::cout << "You only did 1 damage...\n" << encounterPtr->nam << ": Gitgud nub >->\n";
-				// that scrub just dissed you, man
+			std::cout << "You only did 1 damage...\n" << encounterPtr->getName() <<
+				": Gitgud nub >->\n";
+			// that scrub just dissed you, man
 			playerInsulted = true;
 		}
 		else // if not, then damage goes as normally. The program now needs to check if the damage would kill the monster
 		{
-			dmg = player.atk - encounterPtr->def;
+			dmg = player.getAttack() - encounterPtr->getDefense();
 				std::cout << "You did " << dmg << " damage to the slime!\n";
 		}
 		// checks if the damage would kill the monster
-		if (dmg >= encounterPtr->chp)
+		if (dmg >= encounterPtr->getCurrentHealth())
 		{
 			// dead monster now, good riddance
-			encounterPtr->chp = 0;
+			encounterPtr->setCurrentHealth(0);
 			// monster death message
 			std::cout << "You mercilessly slaughtered the slime!\nYou feel like a terrible person...\n";
 			// special dialogue for if the monster insulted you before
 			if (playerInsulted)
 			{
-				std::cout << player.nam << ": Who's the nub now? >->\n";
+				std::cout << player.getName() <<
+					": Who's the nub now? >->\n";
 			}
 			// exp gain
-			std::cout << "You gained " << encounterPtr->exp << " exp!\n";
-			player.exp += encounterPtr->exp;
+			std::cout << "You gained " <<
+				encounterPtr->getExperience() << " exp!\n";
+			player.setExperience(player.getExperience() +
+				encounterPtr->getExperience());
 			// checks for levelup
-			if (player.exp >= player.xpt)
+			if (player.getExperience() >= player.getExpRequired())
 			{
-				std::cout << "You levelled up to level " << ++player.lvl << "!\n";
+				player.setLevel(player.getLevel() + 1);
+				std::cout << "You levelled up to level " <<
+					player.getLevel() << "!\n";
 				// calculates next stats
 				// xpt increases by 80%, other stats by 40%
-				player.chp *= 1.4;
-				player.mhp *= 1.4;
-				player.exp -= player.xpt;
-				player.xpt *= 1.8;
-				player.atk *= 1.4;
-				player.def *= 1.4;
+				player.setCurrentHealth(
+					player.getCurrentHealth() * 1.4);
+				player.setMaxHealth(player.getMaxHealth() *
+					1.4);
+				player.setExperience(player.getExperience() -
+					player.getExpRequired());
+				player.setExpRequired(player.getExpRequired() *
+					1.8);
+				player.setAttack(player.getAttack() * 1.4);
+				player.setDefense(player.getDefense() * 1.4);
 				// compound interest formulas:
 				// xpt = 10(1.8^(lvl-1))
 				// hp = 10(1.4^(lvl-1))
 				// atk/def = 5(1.4^(lvl-1))
 			}
 			// remove monster from location's thr vector
-			locations[player.loc].thr.erase(locations[player.loc].thr.begin() + encounterIndex);
+			locations[player.getLocation()].getEnemies().erase(
+				locations[player.getLocation()].getEnemies()
+				.begin() + encounterIndex);
 			// checks if the monster just deleted was the last
-			if (locations[player.loc].thr.size() == 0)
+			if (locations[player.getLocation()].getEnemies()
+				.size() == 0)
 			{
 				// flags the location in the death list so recovery observations change
-				death[player.loc] = true;
+				death[player.getLocation()] = true;
 			}
 			// the battle is now over
 			battling = false;
@@ -373,41 +392,47 @@ static bool fight()
 		else // monster survives the hit
 		{
 			// deducts damage from monster hp.
-			encounterPtr->chp -= dmg;
+			encounterPtr->setCurrentHealth(
+				encounterPtr->getCurrentHealth() - dmg);
 		}
 		dmg = 1;
 		// now that you've taken your turn, it's the monster's turn now
 		// be afraid, very afraid
 		// checks if the dmg calculation would result in a negative number or 0
-		if (encounterPtr->atk <= player.def)
+		if (encounterPtr->getAttack() <= player.getDefense())
 		{
 			// if so, damage stays as is, and the player reminds the monster that they should gitgud
-			std::cout << "The " << encounterPtr->nam << " did only did 1 damage...\n" << player.nam << ": Gitgud scrub >->\n";
+			std::cout << "The " << encounterPtr->getName() <<
+				" did only did 1 damage...\n" <<
+				player.getName() << ": Gitgud scrub >->\n";
 			// oooh you just dissed that monster
 			monsterInsulted = true;
 		}
 		else // if not, then damage goes as normally, and the program now needs to check if the damage would kill the player
 		{
 			// if fighting ghost slime, the damage will be fixed to 65535
-			dmg = (encounterPtr->lvl == 65535) ? 65535 : encounterPtr->atk - player.def;
-			std::cout << encounterPtr->nam << " did " << dmg << " damage to you!\n";
+			dmg = (encounterPtr->getLevel() == 65535) ? 65535 : encounterPtr->getAttack() -
+				player.getDefense();
+			std::cout << encounterPtr->getName() << " did " <<
+				dmg << " damage to you!\n";
 		}
 		// checks if the damage would kill the monster
-		if (dmg >= player.chp)
+		if (dmg >= player.getCurrentHealth())
 		{
 			// gg scrub
-			player.chp = 0;
+			player.setCurrentHealth(0);
 			// player death message
-			std::cout << encounterPtr->nam << " has killed you! Looks like you got a taste of your own medicine...\n";
+			std::cout << encounterPtr->getName() << " has killed you! Looks like you got a taste of your own medicine...\n";
 			// special dialogue for fighting ghost slime
-			if (encounterPtr->lvl == 65535)
+			if (encounterPtr->getLevel() == 65535)
 			{
 				std::cout << "Gg scrub\n";
 			}
 			// special dialogue for if the player insulted it before
 			if (monsterInsulted)
 			{
-				std::cout << encounterPtr->nam << ": Who's the scrub now? >->\n";
+				std::cout << encounterPtr->getName() <<
+					": Who's the scrub now? >->\n";
 			}
 			// line break for clarity
 			std::cout << '\n';
@@ -417,7 +442,8 @@ static bool fight()
 		else // lucky player survives the hit
 		{
 			// deducts damage from player hp
-			player.chp -= dmg;
+			player.setCurrentHealth(player.getCurrentHealth() -
+				dmg);
 		}
 	}
 	else // if not already battling, attempt to initiate an encounter
@@ -425,18 +451,20 @@ static bool fight()
 		std::cout << "You look around for a slime to fight\n";
 		dotdotdot();
 		// if death list has this location flagged, that indicates no more monsters will be present
-		if (death[player.loc])
+		if (death[player.getLocation()])
 		{
 			std::cout << "But no slimes appear, and you have a feeling that none ever will\nHe's coming for you. Run...\n";
 		}
 		else
 		{
 			// randomly select a monster from the current location's list of monsters
-			encounterIndex = rand() % locations[player.loc].thr.size();
+			encounterIndex = rand() % locations[
+				player.getLocation()].getEnemies().size();
 			// set encounterPtr to the randomly selected monster's address
-			encounterPtr = &locations[player.loc].thr[encounterIndex];
+			encounterPtr = &locations[player.getLocation()]
+				.getEnemies()[encounterIndex];
 			// plays the monster's encounter message
-			std::cout << encounterPtr->msg;
+			std::cout << encounterPtr->getMessage();
 			// set the current state to battling
 			battling = true;
 		}
@@ -465,18 +493,25 @@ static bool recover()
 		std::cout << "You rest and treat your wounds\n";
 		dotdotdot();
 		// player's current HP now back to max
-		player.chp = player.mhp;
-		std::cout << "Fully recovered, you observe your surroundings\n";
+		player.setCurrentHealth(player.getMaxHealth());
+		std::cout <<
+			"Fully recovered, you observe your surroundings\n";
 		// changes recovery message when randomly selecting
-		if (death[player.loc])
+		if (death[player.getLocation()])
 		{
 			// randomly select a location death message
-			std::cout << locations[player.loc].dth[rand() % locations[player.loc].dth.size()];
+			std::cout << locations[player.getLocation()]
+				.getKillerMessages()
+				[rand() % locations[player.getLocation()]
+				.getKillerMessages().size()];
 		}
 		else
 		{
 			// randomly select a location message
-			std::cout << locations[player.loc].msg[rand() % locations[player.loc].msg.size()];
+			std::cout << locations[player.getLocation()]
+				.getRecoveryMessages()
+				[rand() % locations[player.getLocation()]
+				.getRecoveryMessages().size()];
 		}
 	}
 	else
@@ -493,16 +528,19 @@ static bool journey()
 		std::cout << "You set off to the next area, with dried slime on your hands...\n";
 		dotdotdot();
 		// checks if the location's level requirement is higher than the player's level
-		if (locations.at(player.loc + 1).lvl > player.lvl)
+		if (locations.at(player.getLocation() + 1)
+			.getLevelRequirement() > player.getLevel())
 		{
 			std::cout << "You realize that the slimes there are too strong for you\nYou turn back\n";
 		}
 		else
 		{
 			// next location
-			++player.loc;
+			player.setLocation(player.getLocation() + 1);
 			// at() will crash the program if beyond the vector's range. Any controlled location change does this
-			std::cout << "You arrive at the " << locations.at(player.loc).nam << ". Your slaughter continues\n";
+			std::cout << "You arrive at the " <<
+				locations.at(player.getLocation()).getName() <<
+				". Your slaughter continues\n";
 		}
 	}
 	else
@@ -519,8 +557,10 @@ static bool backtrack()
 		std::cout << "You retrace your steps to look for any stragglers...\n";
 		dotdotdot();
 		// previous location
-		--player.loc;
-		std::cout << "You arrive at " << locations.at(player.loc).nam << ". Your search resumes\n";
+		player.setLocation(player.getLocation() - 1);
+		std::cout << "You arrive at " << locations.at(
+			player.getLocation()).getName() <<
+			". Your search resumes\n";
 	}
 	else
 	{

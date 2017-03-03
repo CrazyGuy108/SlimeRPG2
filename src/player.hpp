@@ -7,13 +7,22 @@
 class Player : public Entity
 {
 public:
-	Player(std::string nam, uint16_t chp, uint16_t mhp, uint16_t lvl,
-		uint16_t exp, uint16_t atk, uint16_t def, uint16_t xpt,
-		uint16_t loc);
+	Player(std::string name, uint16_t currentHealth,
+		uint16_t maxHealth, uint16_t level, uint16_t experience,
+		uint16_t attack, uint16_t defense, uint16_t expRequired,
+		uint16_t location);
 	virtual ~Player() override;
 
-	uint16_t xpt; // exp until next levelup
-	uint16_t loc; // location id
+	uint16_t getExpRequired() const noexcept;
+	uint16_t getLocation() const noexcept;
+	void setExpRequired(uint16_t expRequired) noexcept;
+	void setLocation(uint16_t location) noexcept;
+
+private:
+	// experience required for the next level
+	uint16_t expRequired;
+	// location id
+	uint16_t location;
 };
 
 #endif // PLAYER_HPP
