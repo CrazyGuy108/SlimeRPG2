@@ -107,13 +107,17 @@ std::vector<Location> locations
 			monsters[0], monsters[0], monsters[0]
 		},
 		{ // messages randomly displayed when recovering
-			"Slimes, in their infancy, are green-colored, frolicking in the fields\n",
-			"A bright green slime approaches you and asks, \"Mama?\"\n",
-			"Some older green slimes seem to have a blue-ish tint to them\n"
+			"Slimes, in their infancy, are green-colored, "
+				"frolicking in the fields",
+			"A bright green slime approaches you and asks, \"Mama?"
+				"\"",
+			"Some older green slimes seem to have a blue-ish tint "
+				"to them"
 		},
 		{ // messages when you've killed every monster here
-			"You don't see as much slimes here...\n",
-			"Many slimes are living in fear now that their youthful generation is dead\n"
+			"You don't see as much slimes here...",
+			"Many slimes are living in fear now that their "
+				"youthful generation is dead"
 		}
 	},
 	Location // if you kill or injure a monster, it stays dead/injured
@@ -123,12 +127,15 @@ std::vector<Location> locations
 			monsters[0], monsters[1], monsters[1]
 		},
 		{
-			"You observe a group of blue-tinted green slimes mature into a complete blue\n",
-			"Some younger green slimes follow their older blue friends, though still immature\n"
+			"You observe a group of blue-tinted green slimes "
+				"mature into a complete blue",
+			"Some younger green slimes follow their older blue "
+				"friends, though still immature"
 		},
 		{
-			"A golden flower seems to be judging you for your sins...\n",
-			"A group of slimes seem to be talking about \"He\"...\n"
+			"A golden flower seems to be judging you for your "
+				"sins...",
+			"A group of slimes seem to be talking about \"He\"..."
 		}
 	},
 	Location
@@ -139,12 +146,15 @@ std::vector<Location> locations
 			monsters[0]
 		},
 		{
-			"If a slime harbors anger for too long, it starts to acquire a red-ish tint\n",
-			"An old rivalry of two slimes have turned them blood red with chronic hostility\n"
+			"If a slime harbors anger for too long, it starts to "
+				"acquire a red-ish tint",
+			"An old rivalry of two slimes have turned them blood "
+				"red with chronic hostility"
 		},
 		{
-			"You observe a slime feeling triumphant now that its rival is dead for no reason\n",
-			"It looks like that golden flower is talking to you...\n"
+			"You observe a slime feeling triumphant now that its "
+				"rival is dead for no reason",
+			"It looks like that golden flower is talking to you..."
 		}
 	},
 	Location
@@ -155,12 +165,16 @@ std::vector<Location> locations
 			monsters[2], monsters[1], monsters[1]
 		},
 		{
-			"You observe matured yellow slimes training with some kind of slime weapon...\n",
-			"It seems that blue slimes aren't actually mature, but more of a teenager\n"
+			"You observe matured yellow slimes training with some "
+				"kind of slime weapon...",
+			"It seems that blue slimes aren't actually mature, "
+				"but more of a teenager"
 		},
 		{
-			"A slime bullet flies past you. It seems that you are being hunted...\n",
-			"You see a jar of peanut butter under a cardboard box held up by a stick\n"
+			"A slime bullet flies past you. It seems that you are "
+				"being hunted...",
+			"You see a jar of peanut butter under a cardboard box "
+				"held up by a stick"
 		},
 	},
 	Location
@@ -170,12 +184,15 @@ std::vector<Location> locations
 			monsters[4]
 		},
 		{
-			"A funeral is taking place. You see dried slime being dumped into a grave\n",
-			"How does a slime cry? I don't even know what I saw...\n",
-			"Was that a ghost moaning just now?\n"
+			"A funeral is taking place. You see dried slime being "
+				"dumped into a grave",
+			"How does a slime cry? I don't even know what I "
+				"saw...",
+			"Was that a ghost moaning just now?"
 		},
 		{
-			"Wait you killed the ghost slime? Wow. Gg you dirty hacker...\n"
+			"Wait you killed the ghost slime? Wow. Gg you dirty "
+				"hacker..."
 		}
 	}
 };
@@ -183,7 +200,8 @@ std::vector<Location> locations
 // string to be used as the command input
 std::string cmd;
 
-// used to check if the player is battling, so the command loop will change the command options and whatever else
+// used to check if the player is battling, so the command loop will change
+//  the command options and whatever else
 bool battling{ false };
 
 int main()
@@ -258,7 +276,8 @@ static bool help()
 	{
 		std::cout <<
 			"hlp - Help.....List available commands\n"
-			"sts - Stats....List the stats of your character and the monster\n"
+			"sts - Stats....List the stats of your character and "
+				"the monster\n"
 			"fgt - Fight....*Chants* fite fite fite fite fite\n"
 			"fle - Flee.....Only nubs flee, like you...\n";
 	}
@@ -267,11 +286,15 @@ static bool help()
 		std::cout <<
 			"hlp - Help........List available commands\n"
 			"sts - Stats.......List the stats of your character\n"
-			"rec - Recover.....Treat your wounds and rest, observing the scenery\n"
-			"fgt - Fight.......Engage in battle with a nearby monster\n"
+			"rec - Recover.....Treat your wounds and rest, "
+				"observing the scenery\n"
+			"fgt - Fight.......Engage in battle with a nearby "
+				"monster\n"
 			"jrn - Journey.....Go forward to the next area\n"
-			"bkt - Backtrack...Revisit the location you were just at\n"
-			"lev - Leave.......Going so soon? Fine, but you can't save! >:D\n";
+			"bkt - Backtrack...Revisit the location you were just "
+				"at\n"
+			"lev - Leave.......Going so soon? Fine, but you can't "
+				"save! >:D\n";
 	}
 	return false;
 }
@@ -329,8 +352,10 @@ static bool fight()
 		{
 			// good riddance
 			// monster death message
-			std::cout << "You mercilessly slaughtered the slime!\nYou feel like a terrible person...\n";
-			// special dialogue for if the monster insulted you before
+			std::cout << "You mercilessly slaughtered the slime!\n"
+				"You feel like a terrible person...\n";
+			// special dialogue for if the monster insulted you
+			//  before
 			if (player.isRoasted())
 			{
 				std::cout << player.getName() <<
@@ -352,8 +377,8 @@ static bool fight()
 				encounterIndex);
 			// the battle is now over
 			battling = false;
-			// no need to process the monster's next turn because it's already dead
-			// jumps back to the top of the command loop
+			// no need to process the monster's next turn because
+			//  it's already dead
 			return false;
 		}
 		// now that you've taken your turn, it's the monster's turn now
@@ -379,13 +404,16 @@ static bool fight()
 		if (player.isDead())
 		{
 			// player death message
-			std::cout << encounterPtr->getName() << " has killed you! Looks like you got a taste of your own medicine...\n";
+			std::cout << encounterPtr->getName() << " has killed "
+				"you! Looks like you got a taste of your own "
+				"medicine...\n";
 			// special dialogue for fighting ghost slime
 			if (encounterPtr->getLevel() == 65535)
 			{
 				std::cout << "Gg scrub\n";
 			}
-			// special dialogue for if the player insulted it before
+			// special dialogue for if the player insulted it
+			//  before
 			if (encounterPtr->isRoasted())
 			{
 				std::cout << encounterPtr->getName() <<
@@ -404,11 +432,14 @@ static bool fight()
 		// check if all the monsters are dead
 		if (locations[player.getLocation()].allMonstersDead())
 		{
-			std::cout << "But no slimes appear, and you have a feeling that none ever will\nHe's coming for you. Run...\n";
+			std::cout << "But no slimes appear, and you have a "
+				"feeling that none ever will\nHe's coming for "
+				"you. Run...\n";
 		}
 		else
 		{
-			// randomly select a monster from the current location's list of monsters
+			// randomly select an enemy from the current
+			//  location's list of enemies
 			encounterIndex = rand() % locations[
 				player.getLocation()].getEnemies().size();
 			// set encounterPtr to the randomly selected monster
@@ -427,7 +458,8 @@ static bool flee()
 {
 	if (battling)
 	{
-		std::cout << "You fled from the fight YOU started!\nPick your fights more carefully, coward...\n";
+		std::cout << "You fled from the fight YOU started!\nPick your "
+			"fights more carefully, coward...\n";
 		battling = false;
 	}
 	else
@@ -463,19 +495,23 @@ static bool journey()
 {
 	if (!battling)
 	{
-		std::cout << "You set off to the next area, with dried slime on your hands...\n";
+		std::cout << "You set off to the next area, with dried slime "
+			"on your hands...\n";
 		dotdotdot();
-		// checks if the location's level requirement is higher than the player's level
+		// checks if the location's level requirement is higher than
+		//  the player's current level
 		if (locations.at(player.getLocation() + 1)
 			.getLevelRequirement() > player.getLevel())
 		{
-			std::cout << "You realize that the slimes there are too strong for you\nYou turn back\n";
+			std::cout << "You realize that the slimes there are "
+				"too strong for you\nYou turn back\n";
 		}
 		else
 		{
 			// next location
 			player.journey();
-			// at() will crash the program if beyond the vector's range. Any controlled location change does this
+			// at() will crash the program if the index is beyond
+			//  the vector's bounds
 			std::cout << "You arrive at the " <<
 				locations.at(player.getLocation()).getName() <<
 				". Your slaughter continues\n";
@@ -492,7 +528,8 @@ static bool backtrack()
 {
 	if (!battling)
 	{
-		std::cout << "You retrace your steps to look for any stragglers...\n";
+		std::cout << "You retrace your steps to look for any "
+			"stragglers...\n";
 		dotdotdot();
 		// previous location
 		player.backtrack();
