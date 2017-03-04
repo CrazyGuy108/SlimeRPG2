@@ -1,21 +1,23 @@
 #include "location.hpp"
+#include <cstdlib>
+#include <iterator>
 
-Location::Location(std::string name, uint16_t levelRequirement,
-	std::vector<Monster> enemies,
-	std::vector<std::string> recoveryMessages,
-	std::vector<std::string> killerMessages)
+Location::Location(message_t name, uint16_t levelRequirement,
+	monster_container_t enemies,
+	message_container_t recoveryMessages,
+	message_container_t killerMessages)
 	: name{ name }, levelRequirement{ levelRequirement },
 	enemies{ enemies }, recoveryMessages{ recoveryMessages },
 	killerMessages{ killerMessages }
 {
 }
 
-std::string& Location::getName() noexcept
+Location::message_t& Location::getName() noexcept
 {
 	return name;
 }
 
-const std::string& Location::getName() const noexcept
+const Location::message_t& Location::getName() const noexcept
 {
 	return name;
 }
@@ -25,31 +27,39 @@ uint16_t Location::getLevelRequirement() const noexcept
 	return levelRequirement;
 }
 
-std::vector<Monster>& Location::getEnemies() noexcept
-{
-	return enemies;
-}
-
-const std::vector<Monster>& Location::getEnemies() const noexcept
-{
-	return enemies;
-}
-
-const std::vector<std::string>& Location::getRecoveryMessages() const noexcept
-{
-	if (allMonstersDead())
-	{
-		return killerMessages;
-	}
-	return recoveryMessages;
-}
-
 bool Location::allMonstersDead() const noexcept
 {
 	return enemies.empty();
 }
 
-void Location::removeEnemy(size_t index)
+Location::monster_iterator_t Location::getRandomMonster()
 {
-	enemies.erase(enemies.begin() + index);
+	if (allMonstersDead())
+	{
+		return enemies.end();
+	}
+	return std::next(enemies.begin(),
+		rand() % enemies.size());
 }
+
+const Location::message_t& Location::getRandomMessage() const
+{
+	// choose a message container based on if all the monsters are dead
+	const message_container_t& c{
+		allMonstersDead() && !killerMessages.empty() ?
+		killerMessages : recoveryMessages };
+	// default message if that container is empty
+	if (c.empty())
+	{
+		static const message_t defaultMessage{ "This location seems "
+			"to have an air of mystery around it..." };
+		return defaultMessage;
+	}
+	return c[rand() % c.size()];
+}
+
+void Location::removeEnemy(monster_iterator_t monster)
+{
+	enemies.erase(monster);
+}
+

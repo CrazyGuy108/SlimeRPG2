@@ -51,14 +51,11 @@ Player player
 	10, 10, 1, 0, 5, 5, 10, 0
 };
 
-// pointer to the monster that the player is battling
-Monster* encounterPtr{ nullptr };
-
-// vector index for the encountered monster
-uint8_t encounterIndex;
+// iterator pointing to the monster that the player is battling
+Location::monster_iterator_t monster;
 
 // list of monsters
-std::vector<Monster> monsters
+Location::monster_container_t monsters
 {
 	// name, currentHealth, maxHealth, level, experience, attack, defense,
 	//  encounterMessage
@@ -316,11 +313,11 @@ static bool stats()
 	{
 		std::cout
 			<< "\nMonster\n"
-			<< "name....." << encounterPtr->getName() << '\n'
-			<< "health..." << encounterPtr->getCurrentHealth() <<
-				'/' << encounterPtr->getMaxHealth() << '\n'
-			<< "level...." << encounterPtr->getLevel()
-			<< (encounterPtr->getLevel() == 65535 ?
+			<< "name....." << monster->getName() << '\n'
+			<< "health..." << monster->getCurrentHealth() << '/' <<
+				monster->getMaxHealth() << '\n'
+			<< "level...." << monster->getLevel()
+			<< (monster->getLevel() == 65535 ?
 				"\nGetrekt nub\n" : "\n");
 	}
 	return false;
@@ -332,12 +329,12 @@ static bool fight()
 	{
 		// player's turn
 		// attack the monster
-		uint16_t dmg{ player.damage(*encounterPtr) };
+		uint16_t dmg{ player.damage(*monster) };
 		// monster roasts you if you did only 1 damage
 		if (dmg == 1)
 		{
 			std::cout << "You only did 1 damage...\n" <<
-				encounterPtr->getName() <<
+				monster->getName() <<
 				": Gitgud nub >->\n";
 			// you just got ROASTed!!!
 			player.setRoasted(true);
@@ -348,7 +345,7 @@ static bool fight()
 				" damage to the slime!\n";
 		}
 		// checks if the monster died
-		if (encounterPtr->isDead())
+		if (monster->isDead())
 		{
 			// good riddance
 			// monster death message
@@ -364,17 +361,15 @@ static bool fight()
 			}
 			// exp gain
 			std::cout << "You gained " <<
-				encounterPtr->getExperience() << " exp!\n";
+				monster->getExperience() << " exp!\n";
 			// check if the player leveled up
-			if (player.gainExperience(
-				encounterPtr->getExperience()))
+			if (player.gainExperience(monster->getExperience()))
 			{
 				std::cout << "You leveled up to level " <<
 					player.getLevel() << "!\n";
 			}
 			// remove monster from location's enemies vector
-			locations[player.getLocation()].removeEnemy(
-				encounterIndex);
+			locations[player.getLocation()].removeEnemy(monster);
 			// the battle is now over
 			battling = false;
 			// no need to process the monster's next turn because
@@ -383,40 +378,40 @@ static bool fight()
 		}
 		// now that you've taken your turn, it's the monster's turn now
 		// be afraid, very afraid
-		dmg = encounterPtr->damage(player);
+		dmg = monster->damage(player);
 		// checks if the damage dealt was only 1, indicating that a
 		//  roast is necessary
 		if (dmg == 1)
 		{
 			// player reminds the monster that they should gitgud
-			std::cout << "The " << encounterPtr->getName() <<
+			std::cout << "The " << monster->getName() <<
 				" did only did 1 damage...\n" <<
 				player.getName() << ": Gitgud scrub >->\n";
 			// oooh you just dissed that monster
-			encounterPtr->setRoasted(true);
+			monster->setRoasted(true);
 		}
 		else
 		{
-			std::cout << encounterPtr->getName() << " did " <<
+			std::cout << monster->getName() << " did " <<
 				dmg << " damage to you!\n";
 		}
 		// checks if the damage was too much for the player
 		if (player.isDead())
 		{
 			// player death message
-			std::cout << encounterPtr->getName() << " has killed "
-				"you! Looks like you got a taste of your own "
+			std::cout << monster->getName() << " has killed you! "
+				"Looks like you got a taste of your own "
 				"medicine...\n";
 			// special dialogue for fighting ghost slime
-			if (encounterPtr->getLevel() == 65535)
+			if (monster->getLevel() == 65535)
 			{
 				std::cout << "Gg scrub\n";
 			}
 			// special dialogue for if the player insulted it
 			//  before
-			if (encounterPtr->isRoasted())
+			if (monster->isRoasted())
 			{
-				std::cout << encounterPtr->getName() <<
+				std::cout << monster->getName() <<
 					": Who's the scrub now? >->\n";
 			}
 			// line break for clarity
@@ -430,7 +425,8 @@ static bool fight()
 		std::cout << "You look around for a slime to fight\n";
 		dotdotdot();
 		// check if all the monsters are dead
-		if (locations[player.getLocation()].allMonstersDead())
+		Location& l{ locations[player.getLocation()] };
+		if (l.allMonstersDead())
 		{
 			std::cout << "But no slimes appear, and you have a "
 				"feeling that none ever will\nHe's coming for "
@@ -438,15 +434,10 @@ static bool fight()
 		}
 		else
 		{
-			// randomly select an enemy from the current
-			//  location's list of enemies
-			encounterIndex = rand() % locations[
-				player.getLocation()].getEnemies().size();
-			// set encounterPtr to the randomly selected monster
-			encounterPtr = &locations[player.getLocation()]
-				.getEnemies()[encounterIndex];
+			// get a random enemy from the current location
+			monster = l.getRandomMonster();
 			// plays the monster's encounter message
-			std::cout << encounterPtr->getMessage();
+			std::cout << monster->getMessage() << '\n';
 			// set the current state to battling
 			battling = true;
 		}
@@ -478,11 +469,9 @@ static bool recover()
 		player.recoverHealth();
 		std::cout <<
 			"Fully recovered, you observe your surroundings\n";
-		// randomly select a location message
-		const std::vector<std::string>& msg{
-			locations[player.getLocation()]
-			.getRecoveryMessages() };
-		std::cout << msg[rand() % msg.size()];
+		// randomly select a recovery message
+		const Location& l{ locations[player.getLocation()] };
+		std::cout << l.getRandomMessage() << '\n';
 	}
 	else
 	{

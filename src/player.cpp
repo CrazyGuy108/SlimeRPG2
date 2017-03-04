@@ -25,16 +25,6 @@ uint16_t Player::getLocation() const noexcept
 	return location;
 }
 
-void Player::setExpRequired(uint16_t expRequired) noexcept
-{
-	this->expRequired = expRequired;
-}
-
-void Player::setLocation(uint16_t location) noexcept
-{
-	this->location = location;
-}
-
 bool Player::gainExperience(uint16_t experience)
 {
 	setExperience(getExperience() + experience);

@@ -9,28 +9,33 @@
 class Location
 {
 public:
+	typedef std::string message_t;
+	typedef std::vector<message_t> message_container_t;
+	typedef std::vector<Monster> monster_container_t;
+	typedef monster_container_t::iterator monster_iterator_t;
+
 	Location(std::string name, uint16_t levelRequirement,
-		std::vector<Monster> enemies,
-		std::vector<std::string> recoveryMessages,
-		std::vector<std::string> killerMessages);
+		monster_container_t enemies,
+		message_container_t recoveryMessages,
+		message_container_t killerMessages);
 
-	std::string& getName() noexcept;
-	const std::string& getName() const noexcept;
+	message_t& getName() noexcept;
+	const message_t& getName() const noexcept;
 	uint16_t getLevelRequirement() const noexcept;
-	std::vector<Monster>& getEnemies() noexcept;
-	const std::vector<Monster>& getEnemies() const noexcept;
-	const std::vector<std::string>& getRecoveryMessages() const noexcept;
 	bool allMonstersDead() const noexcept;
+	monster_iterator_t getRandomMonster();
+	const message_t& getRandomMessage() const;
 
-	void removeEnemy(size_t index);
+	// removes an enemy using an iterator from randomEnemy()
+	void removeEnemy(monster_iterator_t monster);
 
 private:
-	std::string name;
+	message_t name;
 	uint16_t levelRequirement;
-	std::vector<Monster> enemies;
-	std::vector<std::string> recoveryMessages;
+	monster_container_t enemies;
+	message_container_t recoveryMessages;
 	// recovery messages for when you've killed every monster in the area
-	std::vector<std::string> killerMessages;
+	message_container_t killerMessages;
 };
 
 #endif // LOCATION_HPP
