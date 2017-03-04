@@ -20,7 +20,9 @@ public:
 	std::vector<Monster>& getEnemies() noexcept;
 	const std::vector<Monster>& getEnemies() const noexcept;
 	const std::vector<std::string>& getRecoveryMessages() const noexcept;
-	const std::vector<std::string>& getKillerMessages() const noexcept;
+	bool allMonstersDead() const noexcept;
+
+	void removeEnemy(size_t index);
 
 private:
 	std::string name;

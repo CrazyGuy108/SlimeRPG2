@@ -37,10 +37,19 @@ const std::vector<Monster>& Location::getEnemies() const noexcept
 
 const std::vector<std::string>& Location::getRecoveryMessages() const noexcept
 {
+	if (allMonstersDead())
+	{
+		return killerMessages;
+	}
 	return recoveryMessages;
 }
 
-const std::vector<std::string>& Location::getKillerMessages() const noexcept
+bool Location::allMonstersDead() const noexcept
 {
-	return killerMessages;
+	return enemies.empty();
+}
+
+void Location::removeEnemy(size_t index)
+{
+	enemies.erase(enemies.begin() + index);
 }

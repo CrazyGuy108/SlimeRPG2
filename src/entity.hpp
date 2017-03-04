@@ -21,8 +21,16 @@ public:
 	uint16_t getExperience() const noexcept;
 	uint16_t getAttack() const noexcept;
 	uint16_t getDefense() const noexcept;
+	bool isRoasted() const noexcept;
+	bool isDead() const noexcept;
 	void setName(const std::string& name);
 	void setName(std::string&& name) noexcept;
+	void setRoasted(bool roasted) noexcept;
+
+	// damages another entity
+	uint16_t damage(Entity& other);
+
+protected:
 	void setCurrentHealth(uint16_t currentHealth) noexcept;
 	void setMaxHealth(uint16_t maxHealth) noexcept;
 	void setLevel(uint16_t level) noexcept;
@@ -38,6 +46,7 @@ private:
 	uint16_t experience;
 	uint16_t attack;
 	uint16_t defense;
+	bool roasted;
 };
 
 #endif // ENTITY_HPP

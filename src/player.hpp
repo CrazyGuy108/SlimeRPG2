@@ -15,8 +15,16 @@ public:
 
 	uint16_t getExpRequired() const noexcept;
 	uint16_t getLocation() const noexcept;
-	void setExpRequired(uint16_t expRequired) noexcept;
-	void setLocation(uint16_t location) noexcept;
+
+	// gain an amount of experience, returning the amount of levels gained
+	bool gainExperience(uint16_t experience);
+
+	// recover all health that was lost
+	void recoverHealth() noexcept;
+
+	// increments/decrements location, used by journey and backtrack cmds
+	void journey() noexcept;
+	void backtrack() noexcept;
 
 private:
 	// experience required for the next level

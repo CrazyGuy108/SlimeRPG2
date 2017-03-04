@@ -1,4 +1,6 @@
 #include "entity.hpp"
+#include <algorithm>
+#include <cstdlib>
 #include <utility>
 
 Entity::Entity(std::string name, uint16_t currentHealth,
@@ -6,7 +8,7 @@ Entity::Entity(std::string name, uint16_t currentHealth,
 	uint16_t attack, uint16_t defense)
 	: name{ name }, currentHealth{ currentHealth }, maxHealth{ maxHealth },
 	level{ level }, experience{ experience }, attack{ attack },
-	defense{ defense }
+	defense{ defense }, roasted{ false }
 {
 }
 
@@ -54,6 +56,16 @@ uint16_t Entity::getDefense() const noexcept
 	return defense;
 }
 
+bool Entity::isDead() const noexcept
+{
+	return currentHealth == 0;
+}
+
+bool Entity::isRoasted() const noexcept
+{
+	return roasted;
+}
+
 void Entity::setName(const std::string& name)
 {
 	this->name = name;
@@ -62,6 +74,27 @@ void Entity::setName(const std::string& name)
 void Entity::setName(std::string&& name) noexcept
 {
 	this->name = std::move(name);
+}
+
+void Entity::setRoasted(bool roasted) noexcept
+{
+	this->roasted = roasted;
+}
+
+uint16_t Entity::damage(Entity& other)
+{
+	// current damage formula: attack - defense
+	uint16_t dmg{ static_cast<uint16_t>(attack - other.defense) };
+	// must be within the range [1, other.currentHealth] inclusive
+	// line breaks and tabs added for clarity
+	dmg = std::min<uint16_t>(
+		std::max<uint16_t>(
+			dmg <= attack ? dmg : 0, // prevents unsigned wrapping
+			1),
+		other.currentHealth);
+	// apply the damage
+	other.currentHealth -= dmg;
+	return dmg;
 }
 
 void Entity::setCurrentHealth(uint16_t currentHealth) noexcept
