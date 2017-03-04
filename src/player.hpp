@@ -3,6 +3,7 @@
 
 #include "entity.hpp"
 #include <cstdint>
+#include <string>
 
 class Player : public Entity
 {

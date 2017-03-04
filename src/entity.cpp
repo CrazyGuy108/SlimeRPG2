@@ -1,6 +1,5 @@
 #include "entity.hpp"
 #include <algorithm>
-#include <cstdlib>
 #include <utility>
 
 Entity::Entity(std::string name, uint16_t currentHealth,
