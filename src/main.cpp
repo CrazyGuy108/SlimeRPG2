@@ -1,4 +1,3 @@
-#include "SlimeRPG.hpp"
 #include "location.hpp"
 #include "monster.hpp"
 #include "player.hpp"
@@ -6,6 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <thread>
+#include <string>
 
 // parses a command, returning true if the game should be terminated
 static bool parseCommand(const std::string& cmd);
@@ -20,27 +20,14 @@ static bool journey();
 static bool backtrack();
 static bool leave();
 
-void input(std::string& ref, const std::string& msg)
-{
-	std::cout << msg;
-	std::getline(std::cin, ref);
-}
+// gets input from user
+static void input(std::string& ref, const std::string& msg);
 
-void sleep(unsigned milliseconds)
-{
-	std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
-}
+// pauses the thread for an amount of milliseconds
+static void sleep(unsigned milliseconds);
 
-void dotdotdot()
-{
-	std::cout << '.';
-	sleep(1000);
-	std::cout << '.';
-	sleep(1000);
-	std::cout << '.';
-	sleep(1000);
-	std::cout << '\n';
-}
+// displays a "..." message with each dot separated by a 1 second delay
+static void dotdotdot();
 
 // the main player
 Player player
@@ -267,7 +254,7 @@ bool parseCommand(const std::string& cmd)
 	return false;
 }
 
-static bool help()
+bool help()
 {
 	if (battling) // battle help message
 	{
@@ -296,7 +283,7 @@ static bool help()
 	return false;
 }
 
-static bool stats()
+bool stats()
 {
 	std::cout
 		<< "name........." << player.getName() << '\n'
@@ -323,7 +310,7 @@ static bool stats()
 	return false;
 }
 
-static bool fight()
+bool fight()
 {
 	if (battling) // fights the monster if battling already
 	{
@@ -445,7 +432,7 @@ static bool fight()
 	return false;
 }
 
-static bool flee()
+bool flee()
 {
 	if (battling)
 	{
@@ -460,7 +447,7 @@ static bool flee()
 	return false;
 }
 
-static bool recover()
+bool recover()
 {
 	if (!battling)
 	{
@@ -480,7 +467,7 @@ static bool recover()
 	return false;
 }
 
-static bool journey()
+bool journey()
 {
 	if (!battling)
 	{
@@ -513,7 +500,7 @@ static bool journey()
 	return false;
 }
 
-static bool backtrack()
+bool backtrack()
 {
 	if (!battling)
 	{
@@ -533,7 +520,29 @@ static bool backtrack()
 	return false;
 }
 
-static bool leave()
+bool leave()
 {
 	return true;
+}
+
+void input(std::string& ref, const std::string& msg)
+{
+	std::cout << msg;
+	std::getline(std::cin, ref);
+}
+
+void sleep(unsigned milliseconds)
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+}
+
+void dotdotdot()
+{
+	std::cout << '.';
+	sleep(1000);
+	std::cout << '.';
+	sleep(1000);
+	std::cout << '.';
+	sleep(1000);
+	std::cout << '\n';
 }
