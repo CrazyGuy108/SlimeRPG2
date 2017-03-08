@@ -23,8 +23,8 @@ public:
 	// recover all health that was lost
 	void recoverHealth() noexcept;
 
-	// increments/decrements location, used by journey and backtrack cmds
-	void journey() noexcept;
+	// increments/decrements location, used by advance and backtrack commands
+	void advance() noexcept;
 	void backtrack() noexcept;
 
 private:

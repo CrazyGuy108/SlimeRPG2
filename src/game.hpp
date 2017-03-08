@@ -26,8 +26,8 @@ private:
 	void stats();
 	void fight();
 	void flee();
-	void recover();
-	void journey();
+	void rest();
+	void advance();
 	void backtrack();
 	void leave();
 

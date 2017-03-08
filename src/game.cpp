@@ -30,35 +30,35 @@ void Game::start()
 
 void Game::execute(const std::string& cmd)
 {
-	if (cmd == "hlp") // help
+	if (cmd == "help")
 	{
 		help();
 	}
-	else if (cmd == "sts") // stats
+	else if (cmd == "stats")
 	{
 		stats();
 	}
-	else if (cmd == "fgt") // fight
+	else if (cmd == "fight")
 	{
 		fight();
 	}
-	else if (cmd == "fle") // flee
+	else if (cmd == "flee")
 	{
 		flee();
 	}
-	else if (cmd == "rec") // recover
+	else if (cmd == "rest")
 	{
-		recover();
+		rest();
 	}
-	else if (cmd == "jrn") // journey
+	else if (cmd == "advance")
 	{
-		journey();
+		advance();
 	}
-	else if (cmd == "bkt") // backtrack
+	else if (cmd == "backtrack")
 	{
 		backtrack();
 	}
-	else if (cmd == "lev") // leave
+	else if (cmd == "leave")
 	{
 		leave();
 	}
@@ -73,26 +73,24 @@ void Game::help()
 	if (state == State::FIGHTING) // battle help message
 	{
 		std::cout <<
-			"hlp - Help.....List available commands\n"
-			"sts - Stats....List the stats of your character and "
-				"the monster\n"
-			"fgt - Fight....*Chants* fite fite fite fite fite\n"
-			"fle - Flee.....Only nubs flee, like you...\n";
+			"help....List available commands\n"
+			"stats...List the stats of your character and the "
+				"monster\n"
+			"fight...*Chants* fite fite fite fite fite\n"
+			"flee....Only nubs flee, like you...\n";
 	}
 	else // regular help message
 	{
 		std::cout <<
-			"hlp - Help........List available commands\n"
-			"sts - Stats.......List the stats of your character\n"
-			"rec - Recover.....Treat your wounds and rest, "
-				"observing the scenery\n"
-			"fgt - Fight.......Engage in battle with a nearby "
-				"monster\n"
-			"jrn - Journey.....Go forward to the next area\n"
-			"bkt - Backtrack...Revisit the location you were just "
-				"at\n"
-			"lev - Leave.......Going so soon? Fine, but you can't "
-				"save! >:D\n";
+			"help........List available commands\n"
+			"stats.......List the stats of your character\n"
+			"recover.....Treat your wounds and rest, observing "
+				"the scenery\n"
+			"fight.......Engage in battle with a nearby monster\n"
+			"advance.....Go forward to the next area\n"
+			"backtrack...Revisit the location you were just at\n"
+			"leave.......Going so soon? Fine, but you can't save! "
+				">:D\n";
 	}
 }
 
@@ -166,7 +164,7 @@ void Game::flee()
 	}
 }
 
-void Game::recover()
+void Game::rest()
 {
 	if (state == State::FIGHTING)
 	{
@@ -185,7 +183,7 @@ void Game::recover()
 	}
 }
 
-void Game::journey()
+void Game::advance()
 {
 	if (state == State::FIGHTING)
 	{
@@ -207,7 +205,7 @@ void Game::journey()
 		else
 		{
 			// next location
-			player.journey();
+			player.advance();
 			// at() will crash the program if the index is beyond
 			//  the vector's bounds
 			std::cout << "You arrive at the " <<

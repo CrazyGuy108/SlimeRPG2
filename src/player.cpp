@@ -59,7 +59,7 @@ void Player::recoverHealth() noexcept
 	setCurrentHealth(getMaxHealth());
 }
 
-void Player::journey() noexcept
+void Player::advance() noexcept
 {
 	++location;
 }

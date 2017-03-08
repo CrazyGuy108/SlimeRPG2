@@ -170,7 +170,7 @@ int main()
 {
 	std::cout << "What is your name?\n\n";
 	std::cin >> player.getName();
-	std::cout << "\nType \"hlp\" for a list of commands\n";
+	std::cout << "\nType \"help\" for a list of commands\n";
 	srand(time(NULL));
 	Game game{ player, locations };
 	game.start();
