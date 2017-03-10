@@ -1,5 +1,7 @@
 #include "game.hpp"
+#include "location.hpp"
 #include "player.hpp"
+#include "world.hpp"
 #include <chrono>
 #include <iostream>
 #include <string>
@@ -11,8 +13,8 @@ enum class Game::State
 	PLAYING, FIGHTING, DEAD
 };
 
-Game::Game(Player& player, std::vector<Location>& locations)
-	: player{ player }, locations{ locations }, state{ State::PLAYING }
+Game::Game(Player& player, World& world)
+	: player{ player }, world{ world }, state{ State::PLAYING }
 {
 }
 
@@ -105,7 +107,7 @@ void Game::stats()
 			player.getExpRequired() << '\n'
 		<< "attack......." << player.getAttack() << '\n'
 		<< "defense......" << player.getDefense() << '\n'
-		<< "location....." << locations[player.getLocation()]
+		<< "location....." << world.getLocation(player.getLocation())
 			.getName() << '\n';
 	if (state == State::FIGHTING) // also lists monster stats if battling
 	{
@@ -131,7 +133,7 @@ void Game::fight()
 		std::cout << "You look around for a slime to fight\n";
 		dotdotdot();
 		// check if all the monsters are dead
-		Location& l{ locations[player.getLocation()] };
+		Location& l{ world.getLocation(player.getLocation()) };
 		if (l.allMonstersDead())
 		{
 			std::cout << "But no slimes appear, and you have a "
@@ -178,7 +180,7 @@ void Game::rest()
 		std::cout <<
 			"Fully recovered, you observe your surroundings\n";
 		// randomly select a recovery message
-		const Location& l{ locations[player.getLocation()] };
+		const Location& l{ world.getLocation(player.getLocation()) };
 		std::cout << l.getRandomMessage() << '\n';
 	}
 }
@@ -189,15 +191,18 @@ void Game::advance()
 	{
 		std::cout << "This command can't be used during battle!\n";
 	}
+	else if (!world.contains(player.getLocation() + 1))
+	{
+		std::cout << "You can't go beyond this area. Blame the dev.\n";
+	}
 	else
 	{
 		std::cout << "You set off to the next area, with dried slime "
 			"on your hands...\n";
 		dotdotdot();
-		// checks if the location's level requirement is higher than
-		//  the player's current level
-		if (locations.at(player.getLocation() + 1)
-			.getLevelRequirement() > player.getLevel())
+		if (world.getLocation(player.getLocation() + 1)
+				.getLevelRequirement() >
+			player.getLevel())
 		{
 			std::cout << "You realize that the slimes there are "
 				"too strong for you\nYou turn back\n";
@@ -206,10 +211,9 @@ void Game::advance()
 		{
 			// next location
 			player.advance();
-			// at() will crash the program if the index is beyond
-			//  the vector's bounds
 			std::cout << "You arrive at the " <<
-				locations.at(player.getLocation()).getName() <<
+				world.getLocation(player.getLocation())
+					.getName() <<
 				". Your slaughter continues\n";
 		}
 	}
@@ -221,6 +225,11 @@ void Game::backtrack()
 	{
 		std::cout << "This command can't be used during battle!\n";
 	}
+	// going back 1 can cause unsigned integer wraparound
+	else if (player.getLocation() - 1 > player.getLocation())
+	{
+		std::cout << "You can't go beyond this area. Blame the dev.\n";
+	}
 	else
 	{
 		std::cout << "You retrace your steps to look for any "
@@ -228,8 +237,8 @@ void Game::backtrack()
 		dotdotdot();
 		// previous location
 		player.backtrack();
-		std::cout << "You arrive at " << locations.at(
-			player.getLocation()).getName() <<
+		std::cout << "You arrive at " <<
+			world.getLocation(player.getLocation()).getName() <<
 			". Your search resumes\n";
 	}
 	
@@ -312,7 +321,7 @@ void Game::winBattle()
 			"!\n";
 	}
 	// remove monster from location's enemies vector
-	locations[player.getLocation()].removeEnemy(monster);
+	world.getLocation(player.getLocation()).removeEnemy(monster);
 	// the battle is now over
 	state = State::PLAYING;
 }

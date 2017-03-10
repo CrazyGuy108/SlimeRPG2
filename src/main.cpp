@@ -2,6 +2,7 @@
 #include "location.hpp"
 #include "monster.hpp"
 #include "player.hpp"
+#include "world.hpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -57,8 +58,8 @@ Location::monster_container_t monsters
 	}
 };
 
-// list of locations
-std::vector<Location> locations
+// a world full of different locations
+World world
 {
 	// name, levelRequirement, enemies, recoveryMessages, killerMessages
 	Location
@@ -172,7 +173,7 @@ int main()
 	std::cin >> player.getName();
 	std::cout << "\nType \"help\" for a list of commands\n";
 	srand(time(NULL));
-	Game game{ player, locations };
+	Game game{ player, world };
 	game.start();
 	return 0;
 }

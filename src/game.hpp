@@ -1,17 +1,17 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "location.hpp"
 #include "monster.hpp"
 #include <string>
 #include <vector>
 
 class Player;
+class World;
 
 class Game
 {
 public:
-	Game(Player& player, std::vector<Location>& locations);
+	Game(Player& player, World& world);
 
 	void start();
 
@@ -40,7 +40,7 @@ private:
 
 	Player& player;
 	std::vector<Monster>::iterator monster;
-	std::vector<Location>& locations;
+	World& world;
 	State state;
 };
 
