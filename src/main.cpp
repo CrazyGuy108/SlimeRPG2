@@ -17,32 +17,32 @@ Monster monsters[]
 	{
 		"Green Slime",
 		5, 5, 1, 4, 3, 3,
-		"A green Slime appeared!\n",
+		"A green Slime appeared!",
 	},
 	Monster
 	{
 		"Blue Slime",
 		8, 8, 2, 6, 5, 5,
-		"A blue Slime appears to avenge its little brother...\n",
+		"A blue Slime appears to avenge its little brother...",
 	},
 	Monster
 	{
 		"Red Slime",
 		10, 10, 3, 8, 25, 0,
-		"A Slime, red with fury, approaches you\n",
+		"A Slime, red with fury, approaches you",
 	},
 	Monster
 	{
 		"Yellow Slime",
 		16, 16, 4, 10, 3, 10,
-		"A matured, yellow Slime confronts you\n",
+		"A matured, yellow Slime confronts you",
 	},
 	Monster
 	{
 		"Ghost Slime",
 		// good luck fighting THAT
 		65535, 65535, 65535, 65535, 65535, 65535,
-		"The ghost of your victims appears...\n",
+		"The ghost of your victims appears...",
 	}
 };
 
@@ -165,9 +165,9 @@ Player player
 
 int main()
 {
-	std::cout << "What is your name?\n\n";
+	std::cout << "What is your name? ";
 	std::cin >> player.getName();
-	std::cout << "\nType \"help\" for a list of commands\n";
+	std::cout << "\nType \"help\" for a list of commands\n\n";
 	srand(time(NULL));
 	Game game{ player, world };
 	game.start();

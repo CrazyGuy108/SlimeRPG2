@@ -5,6 +5,7 @@
 #include "world.hpp"
 #include <chrono>
 #include <iostream>
+#include <limits>
 #include <string>
 #include <thread>
 #include <vector>
@@ -25,10 +26,13 @@ void Game::start()
 	std::string cmd;
 	while (state != State::DEAD)
 	{
-		std::cout << '\n';
+		std::cout << player.getName() << ":/world/" <<
+			player.getLocation()->getName() << "$ ";
 		std::cin >> cmd;
-		std::cout << '\n';
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
+			'\n');
 		execute(cmd);
+		std::cout << '\n';
 	}
 }
 
