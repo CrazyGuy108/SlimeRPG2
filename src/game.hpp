@@ -1,10 +1,10 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "monster.hpp"
 #include <string>
 #include <vector>
 
+class Monster;
 class Player;
 class World;
 
@@ -39,8 +39,9 @@ private:
 	void sleep(unsigned milliseconds);
 
 	Player& player;
-	std::vector<Monster>::iterator monster;
 	World& world;
+	Monster* monster;
+	size_t monsterId;
 	State state;
 };
 

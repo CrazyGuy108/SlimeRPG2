@@ -32,14 +32,27 @@ bool Location::allMonstersDead() const noexcept
 	return enemies.empty();
 }
 
-Location::monster_iterator_t Location::getRandomMonster()
+size_t Location::getRandomMonsterId()
+{
+	return rand() % enemies.size();
+}
+
+Monster* Location::getMonster(size_t id)
 {
 	if (allMonstersDead())
 	{
-		return enemies.end();
+		return nullptr;
 	}
-	return std::next(enemies.begin(),
-		rand() % enemies.size());
+	return &enemies[id];
+}
+
+const Monster* Location::getMonster(size_t id) const
+{
+	if (allMonstersDead())
+	{
+		return nullptr;
+	}
+	return &enemies[id];
 }
 
 const Location::message_t& Location::getRandomMessage() const
@@ -58,8 +71,8 @@ const Location::message_t& Location::getRandomMessage() const
 	return c[rand() % c.size()];
 }
 
-void Location::removeEnemy(monster_iterator_t monster)
+void Location::removeEnemy(size_t id)
 {
-	enemies.erase(monster);
+	enemies.erase(std::next(enemies.begin(), id));
 }
 

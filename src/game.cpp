@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "location.hpp"
+#include "monster.hpp"
 #include "player.hpp"
 #include "world.hpp"
 #include <chrono>
@@ -14,7 +15,8 @@ enum class Game::State
 };
 
 Game::Game(Player& player, World& world)
-	: player{ player }, world{ world }, state{ State::PLAYING }
+	: player{ player }, world{ world }, monster{ nullptr }, monsterId{ 0 },
+	state{ State::PLAYING }
 {
 }
 
@@ -143,7 +145,8 @@ void Game::fight()
 		else
 		{
 			// get a random enemy from the current location
-			monster = l.getRandomMonster();
+			monsterId = l.getRandomMonsterId();
+			monster = l.getMonster(monsterId);
 			// plays the monster's encounter message
 			std::cout << monster->getMessage() << '\n';
 			// set the current state to battling
@@ -321,7 +324,7 @@ void Game::winBattle()
 			"!\n";
 	}
 	// remove monster from location's enemies vector
-	world.getLocation(player.getLocation()).removeEnemy(monster);
+	world.getLocation(player.getLocation()).removeEnemy(monsterId);
 	// the battle is now over
 	state = State::PLAYING;
 }
