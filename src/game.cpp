@@ -54,13 +54,9 @@ void Game::execute(const std::string& cmd)
 	{
 		rest();
 	}
-	else if (cmd == "advance")
+	else if (cmd == "travel")
 	{
-		advance();
-	}
-	else if (cmd == "backtrack")
-	{
-		backtrack();
+		travel();
 	}
 	else if (cmd == "leave")
 	{
@@ -86,14 +82,13 @@ void Game::help()
 	else // regular help message
 	{
 		std::cout <<
-			"help........List available commands\n"
-			"stats.......List the stats of your character\n"
-			"recover.....Treat your wounds and rest, observing "
-				"the scenery\n"
-			"fight.......Engage in battle with a nearby monster\n"
-			"advance.....Go forward to the next area\n"
-			"backtrack...Revisit the location you were just at\n"
-			"leave.......Going so soon? Fine, but you can't save! "
+			"help......List available commands\n"
+			"stats.....List the stats of your character\n"
+			"recover...Treat your wounds and rest, observing the "
+				"scenery\n"
+			"fight.....Engage in battle with a nearby monster\n"
+			"travel....Attempt to go to another area\n"
+			"leave.....Going so soon? Fine, but you can't save! "
 				">:D\n";
 	}
 }
@@ -109,8 +104,7 @@ void Game::stats()
 			player.getExpRequired() << '\n'
 		<< "attack......." << player.getAttack() << '\n'
 		<< "defense......" << player.getDefense() << '\n'
-		<< "location....." << world.getLocation(player.getLocation())
-			.getName() << '\n';
+		<< "location....." << player.getLocation()->getName() << '\n';
 	if (state == State::FIGHTING) // also lists monster stats if battling
 	{
 		std::cout
@@ -135,7 +129,7 @@ void Game::fight()
 		std::cout << "You look around for a slime to fight\n";
 		dotdotdot();
 		// check if all the monsters are dead
-		Location& l{ world.getLocation(player.getLocation()) };
+		Location& l{ *player.getLocation() };
 		if (l.allMonstersDead())
 		{
 			std::cout << "But no slimes appear, and you have a "
@@ -181,70 +175,48 @@ void Game::rest()
 		dotdotdot();
 		player.recoverHealth();
 		std::cout <<
-			"Fully recovered, you observe your surroundings\n";
-		// randomly select a recovery message
-		const Location& l{ world.getLocation(player.getLocation()) };
-		std::cout << l.getRandomMessage() << '\n';
+			"Fully recovered, you observe your surroundings\n" <<
+			player.getLocation()->getRandomMessage() << '\n';
 	}
 }
 
-void Game::advance()
+void Game::travel()
 {
 	if (state == State::FIGHTING)
 	{
 		std::cout << "This command can't be used during battle!\n";
 	}
-	else if (!world.contains(player.getLocation() + 1))
-	{
-		std::cout << "You can't go beyond this area. Blame the dev.\n";
-	}
 	else
 	{
-		std::cout << "You set off to the next area, with dried slime "
-			"on your hands...\n";
-		dotdotdot();
-		if (world.getLocation(player.getLocation() + 1)
-				.getLevelRequirement() >
-			player.getLevel())
+		std::vector<size_t>& exits{ player.getLocation()->getExits() };
+		for (size_t i{ 0 }; i < exits.size(); ++i)
 		{
-			std::cout << "You realize that the slimes there are "
-				"too strong for you\nYou turn back\n";
+			std::cout << '(' << i << ") " <<
+				world.getLocation(exits[i]).getName() << '\n';
+		}
+		std::cout << "Your choice: ";
+		size_t choice;
+		std::cin >> choice;
+		if (std::cin.good())
+		{
+			if (choice < exits.size())
+			{
+				travelTo(exits[choice]);
+			}
+			else
+			{
+				std::cout << "You can't go to that area. "
+					"Blame the dev.\n";
+			}
 		}
 		else
 		{
-			// next location
-			player.advance();
-			std::cout << "You arrive at the " <<
-				world.getLocation(player.getLocation())
-					.getName() <<
-				". Your slaughter continues\n";
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>
+				::max(), '\n');
+			std::cout << "That's not a valid input!\n";
 		}
 	}
-}
-
-void Game::backtrack()
-{
-	if (state == State::FIGHTING)
-	{
-		std::cout << "This command can't be used during battle!\n";
-	}
-	// going back 1 can cause unsigned integer wraparound
-	else if (player.getLocation() - 1 > player.getLocation())
-	{
-		std::cout << "You can't go beyond this area. Blame the dev.\n";
-	}
-	else
-	{
-		std::cout << "You retrace your steps to look for any "
-			"stragglers...\n";
-		dotdotdot();
-		// previous location
-		player.backtrack();
-		std::cout << "You arrive at " <<
-			world.getLocation(player.getLocation()).getName() <<
-			". Your search resumes\n";
-	}
-	
 }
 
 void Game::leave()
@@ -324,7 +296,7 @@ void Game::winBattle()
 			"!\n";
 	}
 	// remove monster from location's enemies vector
-	world.getLocation(player.getLocation()).removeEnemy(monsterId);
+	player.getLocation()->removeEnemy(monsterId);
 	// the battle is now over
 	state = State::PLAYING;
 }
@@ -349,6 +321,25 @@ void Game::loseBattle()
 	std::cout << '\n';
 	// terminates the command loop because you are dead
 	state = State::DEAD;
+}
+
+void Game::travelTo(size_t location)
+{
+	std::cout << "You set off to the next area, with dried slime on your "
+		"hands...\n";
+	dotdotdot();
+	Location& l{ world.getLocation(location) };
+	if (l.getLevelRequirement() > player.getLevel())
+	{
+		std::cout << "You realize that the slimes there are too "
+			"strong for you\nYou turn back\n";
+	}
+	else
+	{
+		player.setLocation(&l);
+		std::cout << "You arrive at the " << l.getName() <<
+			". Your slaughter continues\n";
+	}
 }
 
 void Game::dotdotdot()

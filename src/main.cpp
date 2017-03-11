@@ -8,20 +8,8 @@
 #include <iostream>
 #include <string>
 
-// the main player
-Player player
-{
-	// name, currentHealth, maxHealth, level, experience, attack, defense,
-	//  expRequired, location
-	"Nameless Hero",
-	10, 10, 1, 0, 5, 5, 10, 0
-};
-
-// iterator pointing to the monster that the player is battling
-Location::monster_iterator_t monster;
-
-// list of monsters
-Location::monster_container_t monsters
+// the kinds of monsters that can be encountered
+Monster monsters[]
 {
 	// name, currentHealth, maxHealth, level, experience, attack, defense,
 	//  encounterMessage
@@ -61,7 +49,8 @@ Location::monster_container_t monsters
 // a world full of different locations
 World world
 {
-	// name, levelRequirement, enemies, recoveryMessages, killerMessages
+	// name, levelRequirement, enemies, recoveryMessages, killerMessages,
+	//  exits
 	Location
 	{
 		"Slime Breeding Grounds", 1,
@@ -81,7 +70,8 @@ World world
 			"You don't see as much slimes here...",
 			"Many slimes are living in fear now that their "
 				"youthful generation is dead"
-		}
+		},
+		{ 1 }
 	},
 	Location // if you kill or injure a monster, it stays dead/injured
 	{        // so you can essentially fight it again when you recover
@@ -99,7 +89,8 @@ World world
 			"A golden flower seems to be judging you for your "
 				"sins...",
 			"A group of slimes seem to be talking about \"He\"..."
-		}
+		},
+		{ 0, 2 }
 	},
 	Location
 	{
@@ -118,7 +109,8 @@ World world
 			"You observe a slime feeling triumphant now that its "
 				"rival is dead for no reason",
 			"It looks like that golden flower is talking to you..."
-		}
+		},
+		{ 1, 3 }
 	},
 	Location
 	{
@@ -139,6 +131,7 @@ World world
 			"You see a jar of peanut butter under a cardboard box "
 				"held up by a stick"
 		},
+		{ 2, 4 }
 	},
 	Location
 	{
@@ -156,16 +149,19 @@ World world
 		{
 			"Wait you killed the ghost slime? Wow. Gg you dirty "
 				"hacker..."
-		}
+		},
+		{ 3 }
 	}
 };
 
-// string to be used as the command input
-std::string cmd;
-
-// used to check if the player is battling, so the command loop will change
-//  the command options and whatever else
-bool battling{ false };
+// the main player
+Player player
+{
+	// name, currentHealth, maxHealth, level, experience, attack, defense,
+	//  expRequired, location
+	"Nameless Hero",
+	10, 10, 1, 0, 5, 5, 10, &world.getLocation(0)
+};
 
 int main()
 {
