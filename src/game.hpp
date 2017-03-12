@@ -27,14 +27,14 @@ private:
 	void fight();
 	void flee();
 	void rest();
-	void advance();
-	void backtrack();
+	void travel();
 	void leave();
 
 	// helper methods
 	void battle();
 	void winBattle();
 	void loseBattle();
+	void travelTo(size_t location);
 	void dotdotdot();
 	void sleep(unsigned milliseconds);
 

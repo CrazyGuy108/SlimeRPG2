@@ -3,7 +3,7 @@
 Player::Player(std::string name, uint16_t currentHealth,
 	uint16_t maxHealth, uint16_t level, uint16_t experience,
 	uint16_t attack, uint16_t defense, uint16_t expRequired,
-	size_t location)
+	Location* location)
 	: Entity{ name, currentHealth, maxHealth, level, experience, attack,
 		defense },
 	expRequired{ expRequired },
@@ -20,9 +20,19 @@ uint16_t Player::getExpRequired() const noexcept
 	return expRequired;
 }
 
-size_t Player::getLocation() const noexcept
+Location* Player::getLocation() noexcept
 {
 	return location;
+}
+
+const Location* Player::getLocation() const noexcept
+{
+	return location;
+}
+
+void Player::setLocation(Location* location) noexcept
+{
+	this->location = location;
 }
 
 bool Player::gainExperience(uint16_t experience)
@@ -57,14 +67,4 @@ bool Player::gainExperience(uint16_t experience)
 void Player::recoverHealth() noexcept
 {
 	setCurrentHealth(getMaxHealth());
-}
-
-void Player::advance() noexcept
-{
-	++location;
-}
-
-void Player::backtrack() noexcept
-{
-	--location;
 }

@@ -5,10 +5,11 @@
 Location::Location(message_t name, uint16_t levelRequirement,
 	monster_container_t enemies,
 	message_container_t recoveryMessages,
-	message_container_t killerMessages)
+	message_container_t killerMessages,
+	std::initializer_list<size_t> exits)
 	: name{ name }, levelRequirement{ levelRequirement },
 	enemies{ enemies }, recoveryMessages{ recoveryMessages },
-	killerMessages{ killerMessages }
+	killerMessages{ killerMessages }, exits{ exits }
 {
 }
 
@@ -69,6 +70,16 @@ const Location::message_t& Location::getRandomMessage() const
 		return defaultMessage;
 	}
 	return c[rand() % c.size()];
+}
+
+std::vector<size_t>& Location::getExits() noexcept
+{
+	return exits;
+}
+
+const std::vector<size_t>& Location::getExits() const noexcept
+{
+	return exits;
 }
 
 void Location::removeEnemy(size_t id)

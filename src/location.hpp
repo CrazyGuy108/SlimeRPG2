@@ -3,6 +3,7 @@
 
 #include "monster.hpp"
 #include <cstdint>
+#include <initializer_list>
 #include <string>
 #include <vector>
 
@@ -16,7 +17,8 @@ public:
 	Location(std::string name, uint16_t levelRequirement,
 		monster_container_t enemies,
 		message_container_t recoveryMessages,
-		message_container_t killerMessages);
+		message_container_t killerMessages,
+		std::initializer_list<size_t> exits);
 
 	message_t& getName() noexcept;
 	const message_t& getName() const noexcept;
@@ -26,6 +28,8 @@ public:
 	Monster* getMonster(size_t id);
 	const Monster* getMonster(size_t id) const;
 	const message_t& getRandomMessage() const;
+	std::vector<size_t>& getExits() noexcept;
+	const std::vector<size_t>& getExits() const noexcept;
 
 	// removes an enemy using a monster id
 	void removeEnemy(size_t id);
@@ -37,6 +41,8 @@ private:
 	message_container_t recoveryMessages;
 	// recovery messages for when you've killed every monster in the area
 	message_container_t killerMessages;
+	// holds location indexes for where you can travel to from here
+	std::vector<size_t> exits;
 };
 
 #endif // LOCATION_HPP
