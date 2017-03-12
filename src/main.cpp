@@ -165,6 +165,7 @@ Player player
 
 int main()
 {
+	std::ios_base::sync_with_stdio(false);
 	std::cout << "What is your name? ";
 	std::cin >> player.getName();
 	std::cout << "\nType \"help\" for a list of commands\n\n";
