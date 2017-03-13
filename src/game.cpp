@@ -348,11 +348,11 @@ void Game::travelTo(size_t location)
 
 void Game::dotdotdot()
 {
-	std::cout << '.';
+	std::cout << '.' << std::flush;
 	sleep(1000);
-	std::cout << '.';
+	std::cout << '.' << std::flush;
 	sleep(1000);
-	std::cout << '.';
+	std::cout << '.' << std::flush;
 	sleep(1000);
 	std::cout << '\n';
 }
