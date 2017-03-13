@@ -1,7 +1,7 @@
 #include "game.hpp"
 #include "location.hpp"
-#include "monster.hpp"
-#include "player.hpp"
+#include "entity/monster.hpp"
+#include "entity/player.hpp"
 #include "world.hpp"
 #include <cstdlib>
 #include <ctime>

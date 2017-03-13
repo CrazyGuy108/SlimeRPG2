@@ -1,7 +1,7 @@
 #ifndef LOCATION_HPP
 #define LOCATION_HPP
 
-#include "monster.hpp"
+#include "entity/monster.hpp"
 #include <cstdint>
 #include <initializer_list>
 #include <string>
