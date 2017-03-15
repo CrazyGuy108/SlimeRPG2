@@ -40,19 +40,11 @@ size_t Location::getRandomMonsterId()
 
 Monster* Location::getMonster(size_t id)
 {
-	if (allMonstersDead())
-	{
-		return nullptr;
-	}
 	return &enemies[id];
 }
 
 const Monster* Location::getMonster(size_t id) const
 {
-	if (allMonstersDead())
-	{
-		return nullptr;
-	}
 	return &enemies[id];
 }
 

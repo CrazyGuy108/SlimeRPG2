@@ -1,7 +1,7 @@
 #include "game.hpp"
 #include "location.hpp"
-#include "monster.hpp"
-#include "player.hpp"
+#include "entity/monster.hpp"
+#include "entity/player.hpp"
 #include "world.hpp"
 #include <chrono>
 #include <iostream>
@@ -348,11 +348,11 @@ void Game::travelTo(size_t location)
 
 void Game::dotdotdot()
 {
-	std::cout << '.';
+	std::cout << '.' << std::flush;
 	sleep(1000);
-	std::cout << '.';
+	std::cout << '.' << std::flush;
 	sleep(1000);
-	std::cout << '.';
+	std::cout << '.' << std::flush;
 	sleep(1000);
 	std::cout << '\n';
 }
